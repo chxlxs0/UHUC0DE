@@ -5,6 +5,7 @@
 package Controlador;
 
 import Vista.VentanaNewMonitor;
+import Vista.VistaMensajes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -21,6 +22,7 @@ public class ControladorNewMonitor implements ActionListener {
     private final VentanaNewMonitor añadirMonitor;
     private String codigo, DNI, entrada, mail, name, nick, tef;
     Monitores monitor;
+    VistaMensajes mensaje;
 
     public ControladorNewMonitor(Monitores mon) {
         monitor = mon;
@@ -39,7 +41,6 @@ public class ControladorNewMonitor implements ActionListener {
         this.name = añadirMonitor.name.getText();
         this.nick = añadirMonitor.nick.getText();
         this.tef = añadirMonitor.tef.getText();
-
     }
 
     private void addListeners() {
@@ -53,6 +54,7 @@ public class ControladorNewMonitor implements ActionListener {
         switch (ae.getActionCommand()) {
             case "Insertar": {
             try {
+                if(this.DNI.length() != 9) mensaje = new VistaMensajes("ERROR_DATA");
                 this.monitor.InsertRow(this.codigo,this.DNI,this.entrada,this.mail,this.name,this.nick,this.tef);
             } catch (SQLException ex) {
                 Logger.getLogger(ControladorNewMonitor.class.getName()).log(Level.SEVERE, null, ex);
