@@ -8,6 +8,9 @@ import Vista.VentanaNewMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,7 +52,11 @@ public class ControladorNewMonitor implements ActionListener {
         System.out.println(ae.getActionCommand());
         switch (ae.getActionCommand()) {
             case "Insertar": {
-                    this.monitor.InsertRow(this.codigo,this.DNI,this.entrada,this.mail,this.name,this.nick,this.tef);
+            try {
+                this.monitor.InsertRow(this.codigo,this.DNI,this.entrada,this.mail,this.name,this.nick,this.tef);
+            } catch (SQLException ex) {
+                Logger.getLogger(ControladorNewMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
             }
             break;
             case "Cancelar": {
