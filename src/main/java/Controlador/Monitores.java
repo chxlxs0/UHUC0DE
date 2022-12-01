@@ -8,6 +8,7 @@ import Modelo.Conexion;
 import Vista.VentanaMonitores;
 import Vista.VentanaNewMonitor;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -67,8 +68,24 @@ public class Monitores {
         }
     }
 
-    public void InsertRow(String codigo, String DNI, String entrada, String mail, String name, String nick, String tef) {
-        String insertProduct = "INSERT COl";
+    public void InsertRow(String codigo, String DNI, String entrada, String mail, String name, String nick, String tef) throws SQLException {
+        PreparedStatement insertProduct = null;
+        insertProduct = this.conexion.prepareStatement("INSERT INTO MONITOR VALUES (?,?,?,?,?,?,?)");
+        insertProduct.setString(1, codigo);
+        insertProduct.setString(2, name);
+        insertProduct.setString(3, DNI);
+        insertProduct.setString(4, tef);
+        insertProduct.setString(5, mail);
+        insertProduct.setString(6, entrada);
+        insertProduct.setString(7, nick);
+        System.out.println(insertProduct);
+        
+        
+        
+        
+        
+        
+        
     }
 
 
