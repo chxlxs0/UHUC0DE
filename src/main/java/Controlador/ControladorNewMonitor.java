@@ -43,6 +43,14 @@ public class ControladorNewMonitor implements ActionListener {
         this.tef = añadirMonitor.tef.getText();
     }
 
+    public String getCodigo() {return this.codigo;}
+    public String getDNI() {return this.DNI;}
+    public String getEntrada() {return this.entrada;}
+    public String getMail() {return this.mail;}
+    public String getName() {return this.name;}
+    public String getNick() {return this.nick;}
+    public String getTef() {return this.tef;}
+
     private void addListeners() {
         añadirMonitor.Insertar.addActionListener(this);
         añadirMonitor.Cancelar.addActionListener(this);
@@ -54,8 +62,8 @@ public class ControladorNewMonitor implements ActionListener {
         switch (ae.getActionCommand()) {
             case "Insertar": {
             try {
-                if(this.DNI.length() != 9) mensaje = new VistaMensajes("ERROR_DATA");
-                this.monitor.InsertRow(this.codigo,this.DNI,this.entrada,this.mail,this.name,this.nick,this.tef);
+                getData();
+                this.monitor.InsertRow();
             } catch (SQLException ex) {
                 Logger.getLogger(ControladorNewMonitor.class.getName()).log(Level.SEVERE, null, ex);
             }
