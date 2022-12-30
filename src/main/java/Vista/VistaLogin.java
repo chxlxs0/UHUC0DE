@@ -55,7 +55,7 @@ public class VistaLogin extends javax.swing.JFrame{
         User_field = new javax.swing.JTextField();
         Services_field = new javax.swing.JTextField();
         Password_fied = new javax.swing.JPasswordField();
-        SalirDialogoConexion = new javax.swing.JButton();
+        Salir = new javax.swing.JButton();
         Conectar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -162,16 +162,16 @@ public class VistaLogin extends javax.swing.JFrame{
                     .addComponent(Password_fied, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        SalirDialogoConexion.setText("Salir");
-        SalirDialogoConexion.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        SalirDialogoConexion.addMouseListener(new java.awt.event.MouseAdapter() {
+        Salir.setText("Salir");
+        Salir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Salir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                SalirDialogoConexionMouseClicked(evt);
+                SalirMouseClicked(evt);
             }
         });
-        SalirDialogoConexion.addActionListener(new java.awt.event.ActionListener() {
+        Salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SalirDialogoConexionActionPerformed(evt);
+                SalirActionPerformed(evt);
             }
         });
 
@@ -186,7 +186,7 @@ public class VistaLogin extends javax.swing.JFrame{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Conectar)
                 .addGap(18, 18, 18)
-                .addComponent(SalirDialogoConexion)
+                .addComponent(Salir)
                 .addGap(73, 73, 73))
         );
         layout.setVerticalGroup(
@@ -195,7 +195,7 @@ public class VistaLogin extends javax.swing.JFrame{
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SalirDialogoConexion)
+                    .addComponent(Salir)
                     .addComponent(Conectar))
                 .addGap(0, 22, Short.MAX_VALUE))
         );
@@ -227,9 +227,9 @@ public class VistaLogin extends javax.swing.JFrame{
         
     }//GEN-LAST:event_ServidoresActionPerformed
 
-    private void SalirDialogoConexionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirDialogoConexionMouseClicked
+    private void SalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirMouseClicked
 
-    }//GEN-LAST:event_SalirDialogoConexionMouseClicked
+    }//GEN-LAST:event_SalirMouseClicked
 
     private void Password_fiedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Password_fiedActionPerformed
            
@@ -240,9 +240,9 @@ public class VistaLogin extends javax.swing.JFrame{
 
     }//GEN-LAST:event_Password_fiedKeyPressed
 
-    private void SalirDialogoConexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirDialogoConexionActionPerformed
+    private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SalirDialogoConexionActionPerformed
+    }//GEN-LAST:event_SalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -284,7 +284,7 @@ public class VistaLogin extends javax.swing.JFrame{
     public javax.swing.JButton Conectar;
     public javax.swing.JTextField Ip_field;
     public javax.swing.JPasswordField Password_fied;
-    public javax.swing.JButton SalirDialogoConexion;
+    public javax.swing.JButton Salir;
     public javax.swing.JTextField Services_field;
     public javax.swing.JComboBox<String> Servidores;
     public javax.swing.JTextField User_field;

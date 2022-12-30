@@ -36,6 +36,7 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
         menuMonitores = new javax.swing.JMenu();
         panelMonitor = new javax.swing.JMenuItem();
         menuActividades = new javax.swing.JMenu();
+        Actividad = new javax.swing.JMenuItem();
         menuSalir = new javax.swing.JMenu();
         menuSocios = new javax.swing.JMenu();
 
@@ -64,6 +65,15 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
         Menu.add(menuMonitores);
 
         menuActividades.setText("Actividades");
+
+        Actividad.setText("Actividad");
+        Actividad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActividadActionPerformed(evt);
+            }
+        });
+        menuActividades.add(Actividad);
+
         Menu.add(menuActividades);
 
         menuSalir.setText("Salir");
@@ -101,6 +111,10 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
     private void panelMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_panelMonitorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_panelMonitorActionPerformed
+
+    private void ActividadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActividadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ActividadActionPerformed
     
     
     
@@ -138,6 +152,7 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JMenuItem Actividad;
     public javax.swing.JButton Cerrar;
     public javax.swing.JMenuBar Menu;
     private javax.swing.JMenuItem jMenuItem1;

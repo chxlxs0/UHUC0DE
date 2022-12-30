@@ -12,10 +12,13 @@ import javax.swing.JOptionPane;
 
 public class ControladorLogin implements ActionListener {
 
-    Conexion conector;
-    boolean status;
-    VistaLogin vLogin;
-    VentanaPrincipal ventana;
+    private Conexion conexion;
+    private boolean status;
+    private final VistaLogin vLogin;
+    private VentanaPrincipal ventana;
+    private VistaMensajes mensaje;
+    private String SGBD;
+    
 
     public ControladorLogin() throws SQLException, ClassNotFoundException {
 
@@ -30,11 +33,10 @@ public class ControladorLogin implements ActionListener {
 
     private void addListener() {
         vLogin.Conectar.addActionListener(this);
-        vLogin.SalirDialogoConexion.addActionListener(this);
-        ventana.Cerrar.addActionListener(this);
+        vLogin.Salir.addActionListener(this);
         vLogin.Password_fied.addActionListener(this);
     }
-
+    
     public boolean conectar() throws SQLException, ClassNotFoundException {
 
         String sgbd, ip, servicio_bd, usuario, password;
@@ -44,10 +46,12 @@ public class ControladorLogin implements ActionListener {
         usuario = vLogin.User_field.getText();
         password = new String(vLogin.Password_fied.getPassword());
         ip = vLogin.Ip_field.getText();
-
+        
+        this.SGBD = sgbd;
+        
         try {
-            conector = new Conexion(sgbd, ip, servicio_bd, usuario, password);
-            return !conector.getConexion().isClosed();
+            conexion = new Conexion(sgbd, ip, servicio_bd, usuario, password);
+            return !conexion.getConexion().isClosed();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("No se ha podido conectar de manera correcta a la Base de Datos");
         }
@@ -56,7 +60,9 @@ public class ControladorLogin implements ActionListener {
     }
 
     public void desconectar() throws SQLException, ClassNotFoundException {
-        conector.desconexion();
+        if (status == true) {
+            conexion.getConexion().close();
+        }
     }
 
     public boolean getStatus() {
@@ -71,11 +77,18 @@ public class ControladorLogin implements ActionListener {
             case "Conectar": {
                 System.out.println("\n\n\n\n\n\n\nConectar\n\n\n\n\n\n\n");
                 try {
-
                     status = conectar();
-                    ControladorPrincipal c = new ControladorPrincipal(conector);
+                    if (status) {
+                        ControladorPrincipal c = new ControladorPrincipal(conexion, this.SGBD);
+                    } else {
+                        Thread.sleep(1000*4);
+                        throw new SQLException();
+                    }
 
                 } catch (SQLException | ClassNotFoundException ex) {
+                    this.mensaje = new VistaMensajes("ERROR", "Error al intentar conectarse");
+                    
+                } catch (InterruptedException ex) {
                     Logger.getLogger(ControladorLogin.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -83,12 +96,14 @@ public class ControladorLogin implements ActionListener {
             case "Salir": {
                 try {
                     desconectar();
+                    vLogin.dispose();
+                    System.exit(0);
                 } catch (ClassNotFoundException | SQLException e) {
 
                     JOptionPane.showMessageDialog(null, "Operación no realizada");
+                    this.mensaje = new VistaMensajes("ERROR", "Error al intentar desconectarse");
 
                 }
-                System.exit(0);
 
             }
             break;

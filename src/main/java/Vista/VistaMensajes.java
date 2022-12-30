@@ -12,21 +12,9 @@ import javax.swing.JOptionPane;
 
 public class VistaMensajes {
 
-    public VistaMensajes(String error) {
+    public VistaMensajes(String message, String error) {
 
-        switch (error) {
-            case "ERROR":
-                JOptionPane.showMessageDialog(null, "Se ha producido un error");
-                break;
-            case "CONECTADO":
-                JOptionPane.showMessageDialog(null, "Se ha conectado correctamente");
-                break;
-            case "ERROR_DATA":
-                JOptionPane.showMessageDialog(null, "Los datos introducidos son erroneos");
-                break;
-            default:
-                throw new AssertionError();
-        }
+        JOptionPane.showMessageDialog(null, message);
     }
 
 }

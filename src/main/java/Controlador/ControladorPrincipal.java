@@ -13,21 +13,25 @@ import Vista.VentanaPrincipal;
 import Vista.VistaLogin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class ControladorPrincipal implements ActionListener {
 
-    VentanaPrincipal ventana;
-    Vista.VistaLogin vLogin;
-    ControladorMonitores cMonitores;
-    Conexion conexion;
+    private final VentanaPrincipal ventana;
+    private final Vista.VistaLogin vLogin;
+    private ControladorMonitores cMonitores;
+    private ControladorActividad cActividad;
+    private final Conexion conexion;
+    private final String SBD;
     
 
-    public ControladorPrincipal(Conexion conection) {
+    public ControladorPrincipal(Conexion conection, String SGBD) {
         this.conexion = conection;
         ventana = new VentanaPrincipal();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
         vLogin = new VistaLogin();
+        this.SBD = SGBD;
         addListeners();
     }
 
@@ -35,6 +39,7 @@ public class ControladorPrincipal implements ActionListener {
         ventana.Cerrar.addActionListener(this);
         vLogin.Conectar.addActionListener(this);
         ventana.panelMonitor.addActionListener(this);
+        ventana.Actividad.addActionListener(this);
     }
 
     @Override
@@ -49,8 +54,13 @@ public class ControladorPrincipal implements ActionListener {
                 try {
                     this.cMonitores = new ControladorMonitores(this.conexion);
 
-                } catch (Exception e) {
+                } catch (SQLException e) {
                 }
+            }
+            
+                break;
+            case "Actividad": {
+                this.cActividad = new ControladorActividad(this.conexion, this.SBD);
             }
                 break;
             default:
