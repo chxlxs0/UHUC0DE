@@ -34,15 +34,15 @@ public class VentanaSocio extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaMonitores = new javax.swing.JTable();
-        deleteMonitor = new javax.swing.JButton();
-        actMonitor = new javax.swing.JButton();
-        newMonitor = new javax.swing.JButton();
+        deleteSocio = new javax.swing.JButton();
+        actSocio = new javax.swing.JButton();
+        newSocio = new javax.swing.JButton();
         Salir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 3, 24)); // NOI18N
-        jLabel1.setText("GESTIÓN DE MONITORES");
+        jLabel1.setText("GESTIÓN DE SOCIOS");
 
         tablaMonitores.setAutoCreateRowSorter(true);
         tablaMonitores.setModel(new javax.swing.table.DefaultTableModel(
@@ -55,19 +55,19 @@ public class VentanaSocio extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tablaMonitores);
 
-        deleteMonitor.setText("Baja de monitor");
+        deleteSocio.setText("Baja de socio");
 
-        actMonitor.setText("Actualizar Monitor");
-        actMonitor.addActionListener(new java.awt.event.ActionListener() {
+        actSocio.setText("Actualizar Socio");
+        actSocio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                actMonitorActionPerformed(evt);
+                actSocioActionPerformed(evt);
             }
         });
 
-        newMonitor.setText("Nuevo Monitor");
-        newMonitor.addActionListener(new java.awt.event.ActionListener() {
+        newSocio.setText("Nuevo Socio");
+        newSocio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newMonitorActionPerformed(evt);
+                newSocioActionPerformed(evt);
             }
         });
 
@@ -88,11 +88,11 @@ public class VentanaSocio extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(newMonitor)
+                            .addComponent(newSocio)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(deleteMonitor)
+                            .addComponent(deleteSocio)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(actMonitor)
+                            .addComponent(actSocio)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(Salir))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -107,9 +107,9 @@ public class VentanaSocio extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(deleteMonitor)
-                    .addComponent(actMonitor)
-                    .addComponent(newMonitor)
+                    .addComponent(deleteSocio)
+                    .addComponent(actSocio)
+                    .addComponent(newSocio)
                     .addComponent(Salir))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
@@ -117,17 +117,17 @@ public class VentanaSocio extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMonitorActionPerformed
+    private void newSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSocioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_newMonitorActionPerformed
+    }//GEN-LAST:event_newSocioActionPerformed
 
     private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_SalirActionPerformed
 
-    private void actMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actMonitorActionPerformed
+    private void actSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actSocioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_actMonitorActionPerformed
+    }//GEN-LAST:event_actSocioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -171,11 +171,11 @@ public class VentanaSocio extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton Salir;
-    public javax.swing.JButton actMonitor;
-    public javax.swing.JButton deleteMonitor;
+    public javax.swing.JButton actSocio;
+    public javax.swing.JButton deleteSocio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    public javax.swing.JButton newMonitor;
+    public javax.swing.JButton newSocio;
     public javax.swing.JTable tablaMonitores;
     // End of variables declaration//GEN-END:variables
 

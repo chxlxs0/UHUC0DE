@@ -10,7 +10,7 @@ package Modelo;
  */
 public class Socio {
 
-    private final String codigo, DNI, entrada, mail, name, categoria, tef;
+    private final String codigo, DNI, entrada, mail, name, categoria, tef, nac;
 
     public Socio() {
         this.codigo = null;
@@ -20,11 +20,10 @@ public class Socio {
         this.categoria = null;
         this.tef = null;
         this.name = null;
-        
-        
+        this.nac = null;
     }
 
-    public Socio(String codigo, String name, String dni, String tef, String mail, String entrada, String categoria) {
+    public Socio(String codigo, String name, String dni, String nac, String tef, String mail, String entrada, String categoria) {
         this.codigo = codigo;
         this.DNI = dni;
         this.entrada = entrada;
@@ -32,6 +31,7 @@ public class Socio {
         this.categoria = categoria;
         this.tef = tef;
         this.name = name;
+        this.nac = nac;
     }
 
     public String getCodigo() {
@@ -60,5 +60,9 @@ public class Socio {
 
     public String getTef() {
         return this.tef;
+    }
+    
+    public String getNac() {
+        return this.nac;
     }
 }

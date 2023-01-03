@@ -4,7 +4,6 @@
  */
 package Controlador;
 
-
 import Modelo.Socio;
 import Modelo.SocioDAO;
 import Vista.VentanaNewSocio;
@@ -14,6 +13,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,16 +23,16 @@ import javax.swing.JOptionPane;
 public class ControladorVentanaNuevoSocio implements ActionListener {
 
     private final VentanaNewSocio ventanaNuevoSocio;
-    private String codigo, DNI, entrada, mail, name, categoria, tef;
+    private String nSocio, DNI, entrada, mail, name, categoria, tef, fNacimiento;
     private final SocioDAO gestorSocio;
     private Socio nuevoSocio;
 
     public ControladorVentanaNuevoSocio(SocioDAO gestor) {
         gestorSocio = gestor;
         ventanaNuevoSocio = new VentanaNewSocio();
+        ventanaNuevoSocio.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ventanaNuevoSocio.setLocationRelativeTo(null);
         ventanaNuevoSocio.setVisible(true);
-
         addListeners();
     }
 
@@ -45,33 +45,38 @@ public class ControladorVentanaNuevoSocio implements ActionListener {
         ventanaNuevoSocio.code.setEditable(false);
         ventanaNuevoSocio.code.setText(m.getCodigo());
         ventanaNuevoSocio.dni.setText(m.getDNI());
-        ventanaNuevoSocio.fecha.setDateFormatString(m.getEntrada());
+        ventanaNuevoSocio.fechaNac.setDateFormatString(m.getEntrada());
         ventanaNuevoSocio.mail.setText(m.getMail());
         ventanaNuevoSocio.name.setText(m.getName());
         ventanaNuevoSocio.categoria.setText(m.getCategoria());
         ventanaNuevoSocio.tef.setText(m.getTef());
-        
+
         ventanaNuevoSocio.Insertar.setName("Hola");
 
         addListeners();
     }
 
     private void nuevoSocio() {
-        this.codigo = ventanaNuevoSocio.code.getText();
+        this.nSocio = ventanaNuevoSocio.code.getText();
         this.DNI = ventanaNuevoSocio.dni.getText();
         SimpleDateFormat x = new SimpleDateFormat("dd/MM/yyyy");
+
         this.entrada = x.format(ventanaNuevoSocio.fecha.getDate());
         this.mail = ventanaNuevoSocio.mail.getText();
         this.name = ventanaNuevoSocio.name.getText();
         this.categoria = ventanaNuevoSocio.categoria.getText();
         this.tef = ventanaNuevoSocio.tef.getText();
+        SimpleDateFormat y = new SimpleDateFormat("dd/MM/yyyy");
 
-        nuevoSocio = new Socio(this.codigo, this.name, this.DNI, this.tef, this.mail, this.entrada, this.categoria);
+        this.fNacimiento = y.format(ventanaNuevoSocio.fechaNac.getDate());
+
+        nuevoSocio = new Socio(this.nSocio, this.name, this.DNI, this.fNacimiento, this.tef, this.mail, this.entrada, this.categoria);
     }
 
     private void addListeners() {
         ventanaNuevoSocio.Insertar.addActionListener(this);
         ventanaNuevoSocio.Cancelar.addActionListener(this);
+        ventanaNuevoSocio.fechaNac.setDateFormatString("dd/MM/yyyy");
         ventanaNuevoSocio.fecha.setDateFormatString("dd/MM/yyyy");
     }
 
@@ -79,7 +84,7 @@ public class ControladorVentanaNuevoSocio implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         System.out.println(ae.getActionCommand());
         switch (ae.getActionCommand()) {
-            case "Insertar":  {
+            case "Insertar": {
                 nuevoSocio();
                 int opc;
                 opc = JOptionPane.showConfirmDialog(null, "Se va a insertar el Socio introducido, ¿Está seguro?", "Confirme para añadir el Socio", JOptionPane.YES_NO_CANCEL_OPTION);

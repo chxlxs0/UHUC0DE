@@ -37,8 +37,10 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
         panelMonitor = new javax.swing.JMenuItem();
         menuActividades = new javax.swing.JMenu();
         Actividad = new javax.swing.JMenuItem();
-        menuSalir = new javax.swing.JMenu();
+        sal = new javax.swing.JMenu();
+        Salir = new javax.swing.JMenuItem();
         menuSocios = new javax.swing.JMenu();
+        Socios = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -76,10 +78,28 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
 
         Menu.add(menuActividades);
 
-        menuSalir.setText("Salir");
-        Menu.add(menuSalir);
+        sal.setText("Salir");
+
+        Salir.setText("Salir");
+        Salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SalirActionPerformed(evt);
+            }
+        });
+        sal.add(Salir);
+
+        Menu.add(sal);
 
         menuSocios.setText("Socios");
+
+        Socios.setText("Socios");
+        Socios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SociosActionPerformed(evt);
+            }
+        });
+        menuSocios.add(Socios);
+
         Menu.add(menuSocios);
 
         setJMenuBar(Menu);
@@ -115,6 +135,14 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
     private void ActividadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActividadActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ActividadActionPerformed
+
+    private void SociosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SociosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SociosActionPerformed
+
+    private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SalirActionPerformed
     
     
     
@@ -155,12 +183,14 @@ public class VentanaPrincipal extends javax.swing.JFrame  {
     public javax.swing.JMenuItem Actividad;
     public javax.swing.JButton Cerrar;
     public javax.swing.JMenuBar Menu;
+    public javax.swing.JMenuItem Salir;
+    public javax.swing.JMenuItem Socios;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu jPopupMenu1;
     public javax.swing.JMenu menuActividades;
     public javax.swing.JMenu menuMonitores;
-    public javax.swing.JMenu menuSalir;
     public javax.swing.JMenu menuSocios;
     public javax.swing.JMenuItem panelMonitor;
+    public javax.swing.JMenu sal;
     // End of variables declaration//GEN-END:variables
 }

@@ -34,7 +34,7 @@ public class ControladorActividad implements ActionListener {
 
         vAct.setLocationRelativeTo(null);
         vAct.setVisible(true);
-        vAct.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        vAct.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         addListeners();
 

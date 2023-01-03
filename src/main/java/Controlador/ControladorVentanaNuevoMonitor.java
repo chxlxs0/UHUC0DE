@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,6 +32,7 @@ public class ControladorVentanaNuevoMonitor implements ActionListener {
         ventanaNuevoMonitor = new VentanaNewMonitor();
         ventanaNuevoMonitor.setLocationRelativeTo(null);
         ventanaNuevoMonitor.setVisible(true);
+        ventanaNuevoMonitor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         addListeners();
     }
@@ -49,7 +51,7 @@ public class ControladorVentanaNuevoMonitor implements ActionListener {
         ventanaNuevoMonitor.name.setText(m.getName());
         ventanaNuevoMonitor.nick.setText(m.getNick());
         ventanaNuevoMonitor.tef.setText(m.getTef());
-        
+
         ventanaNuevoMonitor.Insertar.setName("Hola");
 
         addListeners();

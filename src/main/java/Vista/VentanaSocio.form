@@ -29,11 +29,11 @@
                   <Component id="jLabel1" alignment="0" min="-2" pref="313" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="newMonitor" min="-2" max="-2" attributes="0"/>
+                          <Component id="newSocio" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="deleteMonitor" min="-2" max="-2" attributes="0"/>
+                          <Component id="deleteSocio" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="actMonitor" min="-2" max="-2" attributes="0"/>
+                          <Component id="actSocio" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="Salir" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -53,9 +53,9 @@
               <Component id="jScrollPane1" min="-2" pref="286" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="deleteMonitor" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="actMonitor" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="newMonitor" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteSocio" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="actSocio" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="newSocio" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="Salir" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="7" max="32767" attributes="0"/>
@@ -69,7 +69,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="24" style="3"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="GESTI&#xd3;N DE MONITORES"/>
+        <Property name="text" type="java.lang.String" value="GESTI&#xd3;N DE SOCIOS"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -99,31 +99,31 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="deleteMonitor">
+    <Component class="javax.swing.JButton" name="deleteSocio">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Baja de monitor"/>
+        <Property name="text" type="java.lang.String" value="Baja de socio"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="actMonitor">
+    <Component class="javax.swing.JButton" name="actSocio">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Actualizar Monitor"/>
+        <Property name="text" type="java.lang.String" value="Actualizar Socio"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="actMonitorActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="actSocioActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="newMonitor">
+    <Component class="javax.swing.JButton" name="newSocio">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Nuevo Monitor"/>
+        <Property name="text" type="java.lang.String" value="Nuevo Socio"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newMonitorActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSocioActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

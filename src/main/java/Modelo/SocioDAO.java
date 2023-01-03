@@ -4,7 +4,6 @@
  */
 package Modelo;
 
-import Vista.VentanaMonitores;
 import Vista.VentanaSocio;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,8 +18,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author nekro
  */
-
-
 public class SocioDAO {
 
     private final Connection conexion;
@@ -47,7 +44,7 @@ public class SocioDAO {
 
         gSocio.tablaMonitores.setModel(model);
 
-        String[] datos = new String[7];
+        String[] datos = new String[8];
         try {
             st = this.conexion.createStatement();
 
@@ -55,7 +52,7 @@ public class SocioDAO {
 
             while (resultado.next()) {
 
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < 8; i++) {
                     datos[i] = resultado.getString(i + 1);
                     System.out.println(datos[i]);
                 }
@@ -65,32 +62,35 @@ public class SocioDAO {
             }
 
         } catch (SQLException e) {
-        } 
+        }
     }
 
     private void RellenarColumnas() {
-        model.addColumn("Código");
+        model.addColumn("Nº Socio");
         model.addColumn("Nombre");
         model.addColumn("DNI");
-        model.addColumn("Teléfono");
+        model.addColumn("Nacimiento");
+        model.addColumn("Telefono");
         model.addColumn("Correo");
-        model.addColumn("Fecha de Incorporación");
+        model.addColumn("Entrada");
         model.addColumn("Categoria");
+
     }
 
     public void InsertSocio(Socio nuevoSocio) throws SQLException {
         System.out.println(numeroSocio);
         numeroSocio++;
-        String codigo = numeroSocio < 100 ? "M0" + numeroSocio : "M" + numeroSocio;
+        String codigo = numeroSocio < 100 ? "S0" + numeroSocio : "S" + numeroSocio;
         String nie = nuevoSocio.getDNI();
 
         try {
             String consulta;
             consulta = String.format(
-                    "INSERT INTO SOCIO VALUES ('%s','%s','%s','%s','%s','%s','%s')",
+                    "INSERT INTO SOCIO VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')",
                     nuevoSocio.getCodigo().equals("") ? codigo : nuevoSocio.getCodigo(),
                     nuevoSocio.getName(),
                     nuevoSocio.getDNI(),
+                    nuevoSocio.getNac(),
                     nuevoSocio.getTef(),
                     nuevoSocio.getMail(),
                     nuevoSocio.getEntrada(),
@@ -102,7 +102,7 @@ public class SocioDAO {
 
             ps.execute();
         } catch (SQLException ex) {
-                UpdateSocio(nuevoSocio, nuevoSocio.getCodigo());
+            UpdateSocio(nuevoSocio, nuevoSocio.getCodigo());
         }
         RefrescarPanelSocios();
     }
@@ -111,40 +111,42 @@ public class SocioDAO {
         try {
             int selectedRow = this.gSocio.tablaMonitores.getSelectedRow();
 
-            String idMonitor = (String) this.gSocio.tablaMonitores.getValueAt(selectedRow, 0);
-            
+            String idSocio = (String) this.gSocio.tablaMonitores.getValueAt(selectedRow, 0); //tablaMonitores en gSocio == tablaSocios
+
             String consulta = String.format(
-                    "DELETE FROM SOCIO WHERE MONITOR.CODMONITOR = '%s'",
-                    idMonitor
+                    "DELETE FROM SOCIO WHERE SOCIO.numeroSocio = '%s'",
+                    idSocio
             );
-            
+
             numeroSocio--;
             ps = this.conexion.prepareStatement(consulta);
             ps.execute();
-            JOptionPane.showMessageDialog(null, "El SOCIO se ha borrado correctamente");
+            JOptionPane.showMessageDialog(null, "El socio se ha borrado correctamente");
             RefrescarPanelSocios();
         } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(gSocio, "No se ha seleccionador ningun SOCIO para dar de ");
+            JOptionPane.showMessageDialog(gSocio, "No se ha seleccionador ningun socio para dar de baja");
         }
     }
 
-    public void UpdateSocio(Socio m, String codigo) throws SQLException {
+    public void UpdateSocio(Socio nuevoSocio, String codigo) throws SQLException {
         String consulta;
         consulta = String.format(
                 "UPDATE SOCIO "
-                        + "SET SOCIO.nombre = '%s', "
-                        + "SOCIO.dni = '%s', "
-                        + "SOCIO.telefono = '%s', "
-                        + "SOCIO.correo = '%s', "
-                        + "SOCIO.fechaEntrada = '%s', "
-                        + "SOCIO.nick = '%s' "
-                        + "WHERE SOCIO.codMonitor = '%s' ",
-                m.getName(), 
-                m.getDNI(),
-                m.getTef(),
-                m.getMail(), 
-                m.getEntrada(),
-                m.getCategoria(),
+                + "SET SOCIO.nombre = '%s', "
+                + "SOCIO.dni = '%s', "
+                + "SOCIO.fechaNacimiento = '%s', "
+                + "SOCIO.telefono = '%s', "
+                + "SOCIO.correo = '%s', "
+                + "SOCIO.fechaEntrada = '%s', "
+                + "SOCIO.categoria = '%s' "
+                + "WHERE SOCIO.numeroSocio = '%s'",
+                nuevoSocio.getName(),
+                nuevoSocio.getDNI(),
+                nuevoSocio.getNac(),
+                nuevoSocio.getTef(),
+                nuevoSocio.getMail(),
+                nuevoSocio.getEntrada(),
+                nuevoSocio.getCategoria(),
                 codigo
         );
 
