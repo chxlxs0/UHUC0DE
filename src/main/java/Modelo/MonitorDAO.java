@@ -5,13 +5,17 @@
 package Modelo;
 
 import Vista.VentanaMonitores;
-import java.sql.Connection;
+
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
-import java.sql.Statement;
-import javax.swing.JOptionPane;
+
+import java.util.ArrayList;
+
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 
 /**
  *
@@ -19,49 +23,44 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MonitorDAO {
 
-    private final Connection conexion;
+    private final Session sesion;
     private final VentanaMonitores gMonitores;
     private DefaultTableModel model;
     private PreparedStatement ps;
 
     int numeroMonitores;
 
-    public MonitorDAO(Conexion con, VentanaMonitores gMonitores) {
-        this.conexion = con.getConexion();
+    public MonitorDAO(Session sesion, VentanaMonitores gMonitores) {
+        this.sesion = sesion;
         this.gMonitores = gMonitores;
+        numeroMonitores = 0;
     }
 
     public void RefrescarPanelMonitores() {
+
+        Transaction transaction = sesion.beginTransaction();
+        NativeQuery consulta = sesion.createNativeQuery("SELECT * FROM MONITOR", Monitor.class);
+        ArrayList<Monitor> monitores = (ArrayList<Monitor>) consulta.list();
+        transaction.commit();
+
         model = new DefaultTableModel();
-        numeroMonitores = 0;
-
+        numeroMonitores = monitores.size();
         RellenarColumnas();
-
-        String selectAllProducts = "SELECT * FROM MONITOR";
-
-        Statement st;
 
         gMonitores.tablaMonitores.setModel(model);
 
         String[] datos = new String[7];
-        try {
-            st = this.conexion.createStatement();
-
-            ResultSet resultado = st.executeQuery(selectAllProducts);
-
-            while (resultado.next()) {
-
-                for (int i = 0; i < 7; i++) {
-                    datos[i] = resultado.getString(i + 1);
-                    System.out.println(datos[i]);
-                }
-                model.addRow(datos);
-                numeroMonitores++;
-                System.out.println("EL NUEVO NUMERO DE MONITORES ES: " + numeroMonitores);
-            }
-
-        } catch (SQLException e) {
-        } 
+        for (Monitor m : monitores) {
+            datos[0] = m.getCodmonitor();
+            datos[1] = m.getNombre();
+            datos[2] = m.getDni();
+            datos[3] = m.getTelefono();
+            datos[4] = m.getCorreo();
+            datos[5] = m.getFechaentrada();
+            datos[6] = m.getNick();
+            model.addRow(datos);
+        }
+        
     }
 
     private void RellenarColumnas() {
@@ -75,79 +74,23 @@ public class MonitorDAO {
     }
 
     public void InsertMonitor(Monitor nuevoMonitor) throws SQLException {
-        System.out.println(numeroMonitores);
-        numeroMonitores++;
-        String codigo = numeroMonitores < 100 ? "M0" + numeroMonitores : "M" + numeroMonitores;
-        String nie = nuevoMonitor.getDNI();
-
-        try {
-            String consulta;
-            consulta = String.format(
-                    "INSERT INTO MONITOR VALUES ('%s','%s','%s','%s','%s','%s','%s')",
-                    nuevoMonitor.getCodigo().equals("") ? codigo : nuevoMonitor.getCodigo(),
-                    nuevoMonitor.getName(),
-                    nuevoMonitor.getDNI(),
-                    nuevoMonitor.getTef(),
-                    nuevoMonitor.getMail(),
-                    nuevoMonitor.getEntrada(),
-                    nuevoMonitor.getNick()
-            );
-
-            System.out.println(consulta);
-            ps = this.conexion.prepareStatement(consulta);
-
-            ps.execute();
-        } catch (SQLException ex) {
-                UpdateMonitor(nuevoMonitor, nuevoMonitor.getCodigo());
-        }
+        Transaction transaction = sesion.beginTransaction();
+        sesion.save(nuevoMonitor);
+        transaction.commit();
         RefrescarPanelMonitores();
     }
 
     public void DeleteMonitor() {
-        try {
-            int selectedRow = this.gMonitores.tablaMonitores.getSelectedRow();
 
-            String idMonitor = (String) this.gMonitores.tablaMonitores.getValueAt(selectedRow, 0);
-            
-            String consulta = String.format(
-                    "DELETE FROM MONITOR WHERE MONITOR.CODMONITOR = '%s'",
-                    idMonitor
-            );
-            
-            numeroMonitores--;
-            ps = this.conexion.prepareStatement(consulta);
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "El monitor se ha borrado correctamente");
-            RefrescarPanelMonitores();
-        } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(gMonitores, "No se ha seleccionador ningun monitor para dar de ");
-        }
+        int selectedRow = this.gMonitores.tablaMonitores.getSelectedRow();
+
+        String idMonitor = (String) this.gMonitores.tablaMonitores.getValueAt(selectedRow, 0);
+
+        Transaction transaction = sesion.beginTransaction();
+        Monitor monitor = sesion.get(Monitor.class, idMonitor);
+        sesion.delete(monitor);
+        transaction.commit();
     }
 
-    public void UpdateMonitor(Monitor m, String codigo) throws SQLException {
-        String consulta;
-        consulta = String.format(
-                "UPDATE MONITOR "
-                        + "SET MONITOR.nombre = '%s', "
-                        + "MONITOR.dni = '%s', "
-                        + "MONITOR.telefono = '%s', "
-                        + "MONITOR.correo = '%s', "
-                        + "MONITOR.fechaEntrada = '%s', "
-                        + "MONITOR.nick = '%s' "
-                        + "WHERE MONITOR.codMonitor = '%s' ",
-                m.getName(), 
-                m.getDNI(),
-                m.getTef(),
-                m.getMail(), 
-                m.getEntrada(),
-                m.getNick(),
-                codigo
-        );
-
-        System.out.println(consulta);
-        ps = this.conexion.prepareStatement(consulta);
-        ps.execute();
-        RefrescarPanelMonitores();
-    }
 
 }

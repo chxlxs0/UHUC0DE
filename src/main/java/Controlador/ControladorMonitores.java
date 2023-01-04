@@ -5,18 +5,13 @@
 package Controlador;
 
 import Modelo.MonitorDAO;
-import Modelo.Conexion;
 import Modelo.Monitor;
 import Vista.VentanaMonitores;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import org.hibernate.Session;
 
 /**
  *
@@ -26,14 +21,14 @@ public class ControladorMonitores implements ActionListener {
 
     private final VentanaMonitores gMonitores;
     private final MonitorDAO monitores;
-    private final Connection conexion;
+    private final Session sesion;
     private ControladorVentanaNuevoMonitor c;
 
-    public ControladorMonitores(Conexion con) throws SQLException {
+    public ControladorMonitores(Session ses) throws SQLException {
         gMonitores = new VentanaMonitores();
 
-        this.monitores = new MonitorDAO(con, gMonitores);
-        this.conexion = con.getConexion();
+        this.monitores = new MonitorDAO(ses, gMonitores);
+        this.sesion = ses;
         monitores.RefrescarPanelMonitores();
 
         gMonitores.setLocationRelativeTo(null);
@@ -50,8 +45,8 @@ public class ControladorMonitores implements ActionListener {
         gMonitores.Salir.addActionListener(this);
     }
 
-    private Monitor getData(int row) {
-        Monitor moniiii;
+    private String[] getData(int row) {
+        Monitor moniiii = new Monitor();
 
         String[] datos = new String[7];
 
@@ -62,9 +57,18 @@ public class ControladorMonitores implements ActionListener {
         datos[4] = (String) this.gMonitores.tablaMonitores.getValueAt(row, 4);
         datos[5] = (String) this.gMonitores.tablaMonitores.getValueAt(row, 5);
         datos[6] = (String) this.gMonitores.tablaMonitores.getValueAt(row, 6);
-        moniiii = new Monitor(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6]);
-        return moniiii;
+
+        moniiii.setCodmonitor(datos[0]);
+        moniiii.setNombre(datos[1]);
+        moniiii.setDni(datos[2]);
+        moniiii.setTelefono(datos[3]);
+        moniiii.setCorreo(datos[4]);
+        moniiii.setFechaentrada(datos[5]);
+        moniiii.setNick(datos[6]);
+
+        return datos;
     }
+
     @Override
     public void actionPerformed(ActionEvent ae
     ) {
@@ -76,22 +80,14 @@ public class ControladorMonitores implements ActionListener {
             break;
 
             case "Baja de monitor": {
-                    monitores.DeleteMonitor();
-                    monitores.RefrescarPanelMonitores();                
+                monitores.DeleteMonitor();
+                monitores.RefrescarPanelMonitores();
             }
             break;
 
             case "Actualizar Monitor": {
-
-                try {
-                    int row = gMonitores.tablaMonitores.getSelectedRow(); 
-                    Monitor monit = getData(row);
-                    monitores.UpdateMonitor(monit, monit.getCodigo());
-                    ControladorVentanaNuevoMonitor m = new ControladorVentanaNuevoMonitor(monitores, monit);
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(ControladorMonitores.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                int row = gMonitores.tablaMonitores.getSelectedRow();
+                ControladorVentanaNuevoMonitor m = new ControladorVentanaNuevoMonitor(monitores, getData(row));
             }
             break;
 

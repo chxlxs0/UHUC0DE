@@ -4,65 +4,161 @@
  */
 package Modelo;
 
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author nekro
  */
-public class Socio {
+@Entity
+@Table(name = "SOCIO")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Socio.findAll", query = "SELECT s FROM Socio s"),
+    @NamedQuery(name = "Socio.findByNumerosocio", query = "SELECT s FROM Socio s WHERE s.numerosocio = :numerosocio"),
+    @NamedQuery(name = "Socio.findByNombre", query = "SELECT s FROM Socio s WHERE s.nombre = :nombre"),
+    @NamedQuery(name = "Socio.findByDni", query = "SELECT s FROM Socio s WHERE s.dni = :dni"),
+    @NamedQuery(name = "Socio.findByFechanacimiento", query = "SELECT s FROM Socio s WHERE s.fechanacimiento = :fechanacimiento"),
+    @NamedQuery(name = "Socio.findByTelefono", query = "SELECT s FROM Socio s WHERE s.telefono = :telefono"),
+    @NamedQuery(name = "Socio.findByCorreo", query = "SELECT s FROM Socio s WHERE s.correo = :correo"),
+    @NamedQuery(name = "Socio.findByFechaentrada", query = "SELECT s FROM Socio s WHERE s.fechaentrada = :fechaentrada"),
+    @NamedQuery(name = "Socio.findByCategoria", query = "SELECT s FROM Socio s WHERE s.categoria = :categoria")})
+public class Socio implements Serializable {
 
-    private final String codigo, DNI, entrada, mail, name, categoria, tef, nac;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "NUMEROSOCIO")
+    private String numerosocio;
+    @Basic(optional = false)
+    @Column(name = "NOMBRE")
+    private String nombre;
+    @Basic(optional = false)
+    @Column(name = "DNI")
+    private String dni;
+    @Column(name = "FECHANACIMIENTO")
+    private String fechanacimiento;
+    @Column(name = "TELEFONO")
+    private String telefono;
+    @Column(name = "CORREO")
+    private String correo;
+    @Basic(optional = false)
+    @Column(name = "FECHAENTRADA")
+    private String fechaentrada;
+    @Basic(optional = false)
+    @Column(name = "CATEGORIA")
+    private Character categoria;
 
     public Socio() {
-        this.codigo = null;
-        this.DNI = null;
-        this.entrada = null;
-        this.mail = null;
-        this.categoria = null;
-        this.tef = null;
-        this.name = null;
-        this.nac = null;
     }
 
-    public Socio(String codigo, String name, String dni, String nac, String tef, String mail, String entrada, String categoria) {
-        this.codigo = codigo;
-        this.DNI = dni;
-        this.entrada = entrada;
-        this.mail = mail;
+    public Socio(String numerosocio) {
+        this.numerosocio = numerosocio;
+    }
+
+    public Socio(String numerosocio, String nombre, String dni, String fechaentrada, Character categoria) {
+        this.numerosocio = numerosocio;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.fechaentrada = fechaentrada;
         this.categoria = categoria;
-        this.tef = tef;
-        this.name = name;
-        this.nac = nac;
     }
 
-    public String getCodigo() {
-        return this.codigo;
+    public String getNumerosocio() {
+        return numerosocio;
     }
 
-    public String getDNI() {
-        return this.DNI;
+    public void setNumerosocio(String numerosocio) {
+        this.numerosocio = numerosocio;
     }
 
-    public String getEntrada() {
-        return this.entrada;
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getMail() {
-        return this.mail;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getName() {
-        return this.name;
+    public String getDni() {
+        return dni;
     }
 
-    public String getCategoria() {
-        return this.categoria;
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
-    public String getTef() {
-        return this.tef;
+    public String getFechanacimiento() {
+        return fechanacimiento;
+    }
+
+    public void setFechanacimiento(String fechanacimiento) {
+        this.fechanacimiento = fechanacimiento;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getFechaentrada() {
+        return fechaentrada;
+    }
+
+    public void setFechaentrada(String fechaentrada) {
+        this.fechaentrada = fechaentrada;
+    }
+
+    public Character getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Character categoria) {
+        this.categoria = categoria;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (numerosocio != null ? numerosocio.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Socio)) {
+            return false;
+        }
+        Socio other = (Socio) object;
+        if ((this.numerosocio == null && other.numerosocio != null) || (this.numerosocio != null && !this.numerosocio.equals(other.numerosocio))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Modelo.Socio[ numerosocio=" + numerosocio + " ]";
     }
     
-    public String getNac() {
-        return this.nac;
-    }
 }

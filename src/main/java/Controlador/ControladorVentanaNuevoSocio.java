@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 public class ControladorVentanaNuevoSocio implements ActionListener {
 
     private final VentanaNewSocio ventanaNuevoSocio;
-    private String nSocio, DNI, entrada, mail, name, categoria, tef, fNacimiento;
+    private String nSocio, DNI, entrada, mail, name, tef, fNacimiento, categoria;
     private final SocioDAO gestorSocio;
     private Socio nuevoSocio;
 
@@ -36,22 +36,22 @@ public class ControladorVentanaNuevoSocio implements ActionListener {
         addListeners();
     }
 
-    public ControladorVentanaNuevoSocio(SocioDAO gestor, Socio m) {
+    public ControladorVentanaNuevoSocio(SocioDAO gestor, String[] m) {
         gestorSocio = gestor;
         ventanaNuevoSocio = new VentanaNewSocio();
         ventanaNuevoSocio.setLocationRelativeTo(null);
         ventanaNuevoSocio.setVisible(true);
 
         ventanaNuevoSocio.code.setEditable(false);
-        ventanaNuevoSocio.code.setText(m.getCodigo());
-        ventanaNuevoSocio.dni.setText(m.getDNI());
-        ventanaNuevoSocio.fechaNac.setDateFormatString(m.getEntrada());
-        ventanaNuevoSocio.mail.setText(m.getMail());
-        ventanaNuevoSocio.name.setText(m.getName());
-        ventanaNuevoSocio.categoria.setText(m.getCategoria());
-        ventanaNuevoSocio.tef.setText(m.getTef());
+        ventanaNuevoSocio.code.setText(m[0]);
+        ventanaNuevoSocio.dni.setText(m[1]);
+        ventanaNuevoSocio.fechaNac.setDateFormatString(m[2]);
+        ventanaNuevoSocio.mail.setText(m[3]);
+        ventanaNuevoSocio.name.setText(m[4]);
+        ventanaNuevoSocio.categoria.setText(m[6]);
+        ventanaNuevoSocio.tef.setText(m[7]);
 
-        ventanaNuevoSocio.Insertar.setName("Hola");
+        ventanaNuevoSocio.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         addListeners();
     }
@@ -70,7 +70,11 @@ public class ControladorVentanaNuevoSocio implements ActionListener {
 
         this.fNacimiento = y.format(ventanaNuevoSocio.fechaNac.getDate());
 
-        nuevoSocio = new Socio(this.nSocio, this.name, this.DNI, this.fNacimiento, this.tef, this.mail, this.entrada, this.categoria);
+        nuevoSocio = new Socio(this.nSocio, this.name, this.DNI, this.entrada, this.categoria.charAt(0));
+
+        nuevoSocio.setFechanacimiento(fNacimiento);
+        nuevoSocio.setTelefono(tef);
+        nuevoSocio.setCorreo(mail);
     }
 
     private void addListeners() {

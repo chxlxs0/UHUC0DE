@@ -37,22 +37,21 @@ public class ControladorVentanaNuevoMonitor implements ActionListener {
         addListeners();
     }
 
-    public ControladorVentanaNuevoMonitor(MonitorDAO gestor, Monitor m) {
+    public ControladorVentanaNuevoMonitor(MonitorDAO gestor, String[] m) {
         gestorMonitor = gestor;
         ventanaNuevoMonitor = new VentanaNewMonitor();
         ventanaNuevoMonitor.setLocationRelativeTo(null);
         ventanaNuevoMonitor.setVisible(true);
+        ventanaNuevoMonitor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         ventanaNuevoMonitor.code.setEditable(false);
-        ventanaNuevoMonitor.code.setText(m.getCodigo());
-        ventanaNuevoMonitor.dni.setText(m.getDNI());
-        ventanaNuevoMonitor.fecha.setDateFormatString(m.getEntrada());
-        ventanaNuevoMonitor.mail.setText(m.getMail());
-        ventanaNuevoMonitor.name.setText(m.getName());
-        ventanaNuevoMonitor.nick.setText(m.getNick());
-        ventanaNuevoMonitor.tef.setText(m.getTef());
-
-        ventanaNuevoMonitor.Insertar.setName("Hola");
+        ventanaNuevoMonitor.code.setText(m[0]);
+        ventanaNuevoMonitor.dni.setText(m[1]);
+        ventanaNuevoMonitor.fecha.setDateFormatString(m[2]);
+        ventanaNuevoMonitor.mail.setText(m[3]);
+        ventanaNuevoMonitor.name.setText(m[4]);
+        ventanaNuevoMonitor.nick.setText(m[5]);
+        ventanaNuevoMonitor.tef.setText(m[6]);
 
         addListeners();
     }
@@ -66,8 +65,11 @@ public class ControladorVentanaNuevoMonitor implements ActionListener {
         this.name = ventanaNuevoMonitor.name.getText();
         this.nick = ventanaNuevoMonitor.nick.getText();
         this.tef = ventanaNuevoMonitor.tef.getText();
+        nuevoMonitor = new Monitor(this.codigo, this.name, this.DNI, this.entrada);
 
-        nuevoMonitor = new Monitor(this.codigo, this.name, this.DNI, this.tef, this.mail, this.entrada, this.nick);
+        nuevoMonitor.setCorreo(mail);
+        nuevoMonitor.setNick(nick);
+        nuevoMonitor.setTelefono(tef);
     }
 
     private void addListeners() {

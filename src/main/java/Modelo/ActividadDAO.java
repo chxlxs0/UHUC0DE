@@ -5,13 +5,17 @@
 package Modelo;
 
 import Vista.VentanaActividad;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleTypes;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 
 /**
  *
@@ -19,93 +23,63 @@ import oracle.jdbc.OracleTypes;
  */
 public class ActividadDAO {
 
-    private final Connection conexion;
+    private final Session sesion;
     private final VentanaActividad vAct;
     private DefaultTableModel model;
     private Statement ps;
-    private final String sgbd;
 
     int numeroInscritos;
 
-    public ActividadDAO(Conexion con, VentanaActividad vAct, String SBD) {
-        this.conexion = con.getConexion();
+    public ActividadDAO(Session sesion, VentanaActividad vAct) {
+        this.sesion = sesion;
         this.vAct = vAct;
-        this.sgbd = SBD;
-
-        System.out.println("Base de datos escogida: " + this.sgbd);
 
     }
 
-    public void listaUsuarios(String code) throws SQLException {
+    private String codAct(String item) {
+        Transaction transaction = sesion.beginTransaction();
+        NativeQuery consulta = sesion.createNativeQuery(String.format("SELECT A.IDACTIVIDAD FROM ACTIVIDAD A WHERE A.NOMBRE = '%s'",item));
+        String codUltimoMonitor = consulta.getSingleResult().toString();
+        transaction.commit();
+        return codUltimoMonitor;
+    }
+
+    public void listaUsuarios(String code, String SGBD) throws SQLException {
 
         model = new DefaultTableModel();
-        numeroInscritos = 0;
-        String llamadaProc;
         RellenarColumnas();
-
+        Transaction transaction;
         this.vAct.TablaActividades.setModel(model);
-
-        if (this.sgbd.equals("mariadb")) {
-            llamadaProc = "{ call obtener_datos (?) } ";
+        
+        code = codAct(code);
+        
+        ArrayList<Object[]> resultado;
+        if (SGBD.equals("mariadb")) {
+            transaction = sesion.beginTransaction();
+            StoredProcedureQuery llamada = sesion.createStoredProcedureCall("OBTENER_DATOS")
+                    .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+                    .setParameter(1, code);
+            llamada.execute();
+            resultado = (ArrayList<Object[]>) llamada.getResultList();
+            transaction.commit();
         } else {
-            llamadaProc = "{ call obtener_datos (?,?) } ";
+            transaction = sesion.beginTransaction();
+            StoredProcedureQuery llamada = sesion.createStoredProcedureCall("OBTENER_DATOS")
+                    .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+                    .registerStoredProcedureParameter(2, Class.class, ParameterMode.REF_CURSOR)
+                    .setParameter(1, code);
+            llamada.execute();
+            resultado = (ArrayList<Object[]>) llamada.getResultList();
+            transaction.commit();
         }
 
-        ResultSet resultado;
-        resultado = null;
-        CallableStatement llamadaP = null;
-        try {
-            llamadaP = conexion.prepareCall(llamadaProc);
-            llamadaP.setString(1, codACt(code));
-            if (this.sgbd.equals("oracle")) {
-                llamadaP.registerOutParameter(2, OracleTypes.CURSOR);
-            }
-            llamadaP.execute();
-
-            if (this.sgbd.equals("mariadb")) {
-                resultado = llamadaP.getResultSet();
-
-            } else {
-                resultado = (ResultSet) llamadaP.getObject(2);
-
-            }
-
-            String[] datos = new String[2];
-
-            while (resultado.next()) {
-
-                for (int i = 0; i < 2; i++) {
-                    datos[i] = resultado.getString(i + 1);
-                    System.out.println(datos[i]);
-                }
-                model.addRow(datos);
-                numeroInscritos++;
-                System.out.println("EL NUMERO DE INSCRITOS EN " + vAct.jComboBox1.getSelectedItem() + " ES: " + numeroInscritos);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                llamadaP.close();
-            } catch (SQLException ex) {
-                System.out.println("Error: " + ex.getMessage());
-            }
-        }
-    }
-
-    private String codACt(String nAct) throws SQLException {
-        String selectAllProducts = String.format("SELECT ACTIVIDAD.IDACTIVIDAD FROM ACTIVIDAD WHERE ACTIVIDAD.NOMBRE = '%s'", nAct);
-        ps = this.conexion.createStatement();
-
-        ResultSet resultado = ps.executeQuery(selectAllProducts);
-        String codigo = null;
-
-        while (resultado.next()) {
-            codigo = resultado.getString(1);
-            System.out.println(codigo);
+        numeroInscritos = resultado.size();
+        System.out.println("resultado: " +resultado.size());
+        for (int i = 0; i < resultado.size(); i++) {
+            Object[] sub = resultado.get(i);
+            model.addRow(sub);
         }
 
-        return codigo;
     }
 
     private void RellenarColumnas() {

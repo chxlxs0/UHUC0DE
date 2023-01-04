@@ -4,18 +4,17 @@
  */
 package Controlador;
 
-import Modelo.Conexion;
 import Modelo.Socio;
 import Modelo.SocioDAO;
 import Vista.VentanaSocio;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import org.hibernate.Session;
 
 /**
  *
@@ -25,15 +24,16 @@ public class ControladorSocios implements ActionListener {
 
     private final VentanaSocio gSocios;
     private final SocioDAO socios;
-    private final Connection conexion;
+    private final Session sesion;
+
     private ControladorVentanaNuevoSocio c;
 
-    public ControladorSocios(Conexion con) throws SQLException {
+    public ControladorSocios(Session sesion) throws SQLException {
         gSocios = new VentanaSocio();
-
-        this.socios = new SocioDAO(con, gSocios);
-        this.conexion = con.getConexion();
+        this.socios = new SocioDAO(sesion, gSocios);
         socios.RefrescarPanelSocios();
+
+        this.sesion = sesion;
 
         gSocios.setLocationRelativeTo(null);
         gSocios.setVisible(true);
@@ -49,7 +49,7 @@ public class ControladorSocios implements ActionListener {
         gSocios.Salir.addActionListener(this);
     }
 
-    private Socio getData(int row) {
+    private String[] getData(int row) {
         Socio soocio;
 
         String[] datos = new String[8];
@@ -62,11 +62,14 @@ public class ControladorSocios implements ActionListener {
         datos[5] = (String) this.gSocios.tablaMonitores.getValueAt(row, 5);
         datos[6] = (String) this.gSocios.tablaMonitores.getValueAt(row, 6);
         datos[7] = (String) this.gSocios.tablaMonitores.getValueAt(row, 7);
-       
-        soocio = new Socio(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7]);
-        return soocio;
+        
+        return datos;
     }
 
+    /**
+     *
+     * @param ae
+     */
     @Override
     public void actionPerformed(ActionEvent ae
     ) {
@@ -85,15 +88,8 @@ public class ControladorSocios implements ActionListener {
 
             case "Actualizar Socio": {
 
-                try {
-                    int row = gSocios.tablaMonitores.getSelectedRow();
-                    Socio socio = getData(row);
-                    socios.UpdateSocio(socio, socio.getCodigo());
-                    ControladorVentanaNuevoSocio m = new ControladorVentanaNuevoSocio(socios, socio);
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(ControladorSocios.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                int row = gSocios.tablaMonitores.getSelectedRow();
+                ControladorVentanaNuevoSocio m = new ControladorVentanaNuevoSocio(socios, getData(row));
             }
             break;
 

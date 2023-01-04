@@ -4,59 +4,162 @@
  */
 package Modelo;
 
+import java.io.Serializable;
+import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  *
  * @author nekro
  */
-public class Monitor {
+@Entity
+@Table(name = "MONITOR")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Monitor.findAll", query = "SELECT m FROM Monitor m"),
+    @NamedQuery(name = "Monitor.findByCodmonitor", query = "SELECT m FROM Monitor m WHERE m.codmonitor = :codmonitor"),
+    @NamedQuery(name = "Monitor.findByNombre", query = "SELECT m FROM Monitor m WHERE m.nombre = :nombre"),
+    @NamedQuery(name = "Monitor.findByDni", query = "SELECT m FROM Monitor m WHERE m.dni = :dni"),
+    @NamedQuery(name = "Monitor.findByTelefono", query = "SELECT m FROM Monitor m WHERE m.telefono = :telefono"),
+    @NamedQuery(name = "Monitor.findByCorreo", query = "SELECT m FROM Monitor m WHERE m.correo = :correo"),
+    @NamedQuery(name = "Monitor.findByFechaentrada", query = "SELECT m FROM Monitor m WHERE m.fechaentrada = :fechaentrada"),
+    @NamedQuery(name = "Monitor.findByNick", query = "SELECT m FROM Monitor m WHERE m.nick = :nick")})
+public class Monitor implements Serializable {
 
-    private final String codigo, DNI, entrada, mail, name, nick, tef;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "CODMONITOR")
+    private String codmonitor;
+    @Basic(optional = false)
+    @Column(name = "NOMBRE")
+    private String nombre;
+    @Basic(optional = false)
+    @Column(name = "DNI")
+    private String dni;
+    @Column(name = "TELEFONO")
+    private String telefono;
+    @Column(name = "CORREO")
+    private String correo;
+    @Basic(optional = false)
+    @Column(name = "FECHAENTRADA")
+    private String fechaentrada;
+    @Column(name = "NICK")
+    private String nick;
+    @OneToMany(mappedBy = "monitorresponsable")
+    private Set<Actividad> actividadSet;
 
     public Monitor() {
-        this.codigo = null;
-        this.DNI = null;
-        this.entrada = null;
-        this.mail = null;
-        this.nick = null;
-        this.tef = null;
-        this.name = null;
     }
 
-    public Monitor(String codigo, String name, String dni, String tef, String mail, String entrada, String nick) {
-        this.codigo = codigo;
-        this.DNI = dni;
-        this.entrada = entrada;
-        this.mail = mail;
-        this.nick = nick;
-        this.tef = tef;
-        this.name = name;
+    public Monitor(String codmonitor) {
+        this.codmonitor = codmonitor;
     }
 
-    public String getCodigo() {
-        return this.codigo;
+    public Monitor(String codmonitor, String nombre, String dni, String fechaentrada) {
+        this.codmonitor = codmonitor;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.fechaentrada = fechaentrada;
     }
 
-    public String getDNI() {
-        return this.DNI;
+    public String getCodmonitor() {
+        return codmonitor;
     }
 
-    public String getEntrada() {
-        return this.entrada;
+    public void setCodmonitor(String codmonitor) {
+        this.codmonitor = codmonitor;
     }
 
-    public String getMail() {
-        return this.mail;
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getName() {
-        return this.name;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getFechaentrada() {
+        return fechaentrada;
+    }
+
+    public void setFechaentrada(String fechaentrada) {
+        this.fechaentrada = fechaentrada;
     }
 
     public String getNick() {
-        return this.nick;
+        return nick;
     }
 
-    public String getTef() {
-        return this.tef;
+    public void setNick(String nick) {
+        this.nick = nick;
     }
+
+    @XmlTransient
+    public Set<Actividad> getActividadSet() {
+        return actividadSet;
+    }
+
+    public void setActividadSet(Set<Actividad> actividadSet) {
+        this.actividadSet = actividadSet;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codmonitor != null ? codmonitor.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Monitor)) {
+            return false;
+        }
+        Monitor other = (Monitor) object;
+        if ((this.codmonitor == null && other.codmonitor != null) || (this.codmonitor != null && !this.codmonitor.equals(other.codmonitor))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Modelo.Monitor[ codmonitor=" + codmonitor + " ]";
+    }
+    
 }

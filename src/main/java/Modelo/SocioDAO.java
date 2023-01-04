@@ -5,14 +5,14 @@
 package Modelo;
 
 import Vista.VentanaSocio;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 /**
  *
@@ -20,48 +20,56 @@ import javax.swing.table.DefaultTableModel;
  */
 public class SocioDAO {
 
-    private final Connection conexion;
+    private final Session sesion;
     private final VentanaSocio gSocio;
     private DefaultTableModel model;
     private PreparedStatement ps;
 
     int numeroSocio;
 
-    public SocioDAO(Conexion con, VentanaSocio gMonitores) {
-        this.conexion = con.getConexion();
-        this.gSocio = gMonitores;
+    public SocioDAO(Session con, VentanaSocio gSocio) {
+        this.sesion = con;
+        this.gSocio = gSocio;
     }
 
     public void RefrescarPanelSocios() {
+        ArrayList<Socio> listaSocios;
+        Transaction transaction = sesion.beginTransaction();
+        Query consulta = sesion.createQuery("SELECT s FROM Socio s", Socio.class);
+
+        listaSocios = (ArrayList<Socio>) consulta.getResultList();
+
+        transaction.commit();
+
         model = new DefaultTableModel();
-        numeroSocio = 0;
-
+        numeroSocio = listaSocios.size();
         RellenarColumnas();
-
-        String selectAllProducts = "SELECT * FROM SOCIO";
-
-        Statement st;
 
         gSocio.tablaMonitores.setModel(model);
 
         String[] datos = new String[8];
-        try {
-            st = this.conexion.createStatement();
+        for (Socio s : listaSocios) {
+            if (s != null) {
+                datos[0] = s.getNumerosocio();
+                datos[1] = s.getNombre();
+                datos[2] = s.getDni();
+                datos[3] = s.getFechanacimiento();
+                datos[4] = s.getTelefono();
+                datos[5] = s.getCorreo();
+                datos[6] = s.getFechaentrada();
+                datos[7] = String.valueOf(s.getCategoria());
 
-            ResultSet resultado = st.executeQuery(selectAllProducts);
+                System.out.println(datos[0]);
+                System.out.println(datos[1]);
+                System.out.println(datos[2]);
+                System.out.println(datos[3]);
+                System.out.println(datos[4]);
+                System.out.println(datos[5]);
+                System.out.println(datos[6]);
+                System.out.println(datos[7]);
 
-            while (resultado.next()) {
-
-                for (int i = 0; i < 8; i++) {
-                    datos[i] = resultado.getString(i + 1);
-                    System.out.println(datos[i]);
-                }
                 model.addRow(datos);
-                numeroSocio++;
-                System.out.println("EL NUEVO NUMERO DE SOCIO ES: " + numeroSocio);
             }
-
-        } catch (SQLException e) {
         }
     }
 
@@ -78,81 +86,29 @@ public class SocioDAO {
     }
 
     public void InsertSocio(Socio nuevoSocio) throws SQLException {
-        System.out.println(numeroSocio);
-        numeroSocio++;
-        String codigo = numeroSocio < 100 ? "S0" + numeroSocio : "S" + numeroSocio;
-        String nie = nuevoSocio.getDNI();
-
-        try {
-            String consulta;
-            consulta = String.format(
-                    "INSERT INTO SOCIO VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')",
-                    nuevoSocio.getCodigo().equals("") ? codigo : nuevoSocio.getCodigo(),
-                    nuevoSocio.getName(),
-                    nuevoSocio.getDNI(),
-                    nuevoSocio.getNac(),
-                    nuevoSocio.getTef(),
-                    nuevoSocio.getMail(),
-                    nuevoSocio.getEntrada(),
-                    nuevoSocio.getCategoria()
-            );
-
-            System.out.println(consulta);
-            ps = this.conexion.prepareStatement(consulta);
-
-            ps.execute();
-        } catch (SQLException ex) {
-            UpdateSocio(nuevoSocio, nuevoSocio.getCodigo());
-        }
+        Transaction transaction = sesion.beginTransaction();
+        sesion.save(nuevoSocio);
+        transaction.commit();
         RefrescarPanelSocios();
     }
 
     public void DeleteSocio() {
-        try {
-            int selectedRow = this.gSocio.tablaMonitores.getSelectedRow();
 
-            String idSocio = (String) this.gSocio.tablaMonitores.getValueAt(selectedRow, 0); //tablaMonitores en gSocio == tablaSocios
+        int selectedRow = this.gSocio.tablaMonitores.getSelectedRow();
 
-            String consulta = String.format(
-                    "DELETE FROM SOCIO WHERE SOCIO.numeroSocio = '%s'",
-                    idSocio
-            );
+        String idSocio = (String) this.gSocio.tablaMonitores.getValueAt(selectedRow, 0);
 
-            numeroSocio--;
-            ps = this.conexion.prepareStatement(consulta);
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "El socio se ha borrado correctamente");
-            RefrescarPanelSocios();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(gSocio, "No se ha seleccionador ningun socio para dar de baja");
-        }
+        Transaction transaction = sesion.beginTransaction();
+        Socio monitor = sesion.get(Socio.class, idSocio);
+        sesion.delete(monitor);
+        transaction.commit();
     }
 
     public void UpdateSocio(Socio nuevoSocio, String codigo) throws SQLException {
-        String consulta;
-        consulta = String.format(
-                "UPDATE SOCIO "
-                + "SET SOCIO.nombre = '%s', "
-                + "SOCIO.dni = '%s', "
-                + "SOCIO.fechaNacimiento = '%s', "
-                + "SOCIO.telefono = '%s', "
-                + "SOCIO.correo = '%s', "
-                + "SOCIO.fechaEntrada = '%s', "
-                + "SOCIO.categoria = '%s' "
-                + "WHERE SOCIO.numeroSocio = '%s'",
-                nuevoSocio.getName(),
-                nuevoSocio.getDNI(),
-                nuevoSocio.getNac(),
-                nuevoSocio.getTef(),
-                nuevoSocio.getMail(),
-                nuevoSocio.getEntrada(),
-                nuevoSocio.getCategoria(),
-                codigo
-        );
-
-        System.out.println(consulta);
-        ps = this.conexion.prepareStatement(consulta);
-        ps.execute();
+        Transaction transaction = sesion.beginTransaction();
+        sesion.save(nuevoSocio);
+        transaction.commit();
+        RefrescarPanelSocios();
         RefrescarPanelSocios();
     }
 

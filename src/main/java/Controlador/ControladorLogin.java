@@ -1,5 +1,7 @@
 package Controlador;
 
+import Modelo.Hibernate.HibernateUtilOracle;
+import Modelo.Hibernate.HibernateUtilMariaDB;
 import Vista.VentanaPrincipal;
 import Modelo.*;
 import Vista.*;
@@ -8,25 +10,25 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.hibernate.Session;
 
 public class ControladorLogin implements ActionListener {
 
-    private Conexion conexion;
+    private Session sesion;
     private boolean status;
     private final VistaLogin vLogin;
     private VentanaPrincipal ventana;
-    private VistaMensajes mensaje;
+    private vMensaje mensaje;
     private String SGBD;
-    
 
     public ControladorLogin() throws SQLException, ClassNotFoundException {
 
         vLogin = new VistaLogin();
-
         vLogin.setLocationRelativeTo(null);
-
         vLogin.setVisible(true);
+        vLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         addListener();
     }
@@ -36,37 +38,25 @@ public class ControladorLogin implements ActionListener {
         vLogin.Salir.addActionListener(this);
         vLogin.Password_fied.addActionListener(this);
     }
-    
-    public boolean conectar() throws SQLException, ClassNotFoundException {
 
-        String sgbd, ip, servicio_bd, usuario, password;
+    public Session conectar() throws SQLException, ClassNotFoundException {
 
-        sgbd = (String) (vLogin.Servidores.getSelectedItem());
-        servicio_bd = vLogin.Services_field.getText();
-        usuario = vLogin.User_field.getText();
-        password = new String(vLogin.Password_fied.getPassword());
-        ip = vLogin.Ip_field.getText();
-        
-        this.SGBD = sgbd;
-        
-        try {
-            conexion = new Conexion(sgbd, ip, servicio_bd, usuario, password);
-            return !conexion.getConexion().isClosed();
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("No se ha podido conectar de manera correcta a la Base de Datos");
+        String server = (String) (vLogin.Servidores.getSelectedItem());
+        if ("MariaDB".equals(server)) {
+            server = "mariadb";
+        } else if ("Oracle".equals(server)) {
+            server = "oracle";
         }
-
-        return false;
+        if ("oracle".equals(server)) {
+            sesion = HibernateUtilOracle.getSessionFactory().openSession();
+        } else if ("mariadb".equals(server)) {
+            sesion = HibernateUtilMariaDB.getSessionFactory().openSession();
+        }
+        return (sesion);
     }
 
     public void desconectar() throws SQLException, ClassNotFoundException {
-        if (status == true) {
-            conexion.getConexion().close();
-        }
-    }
-
-    public boolean getStatus() {
-        return status;
+        sesion.close();
     }
 
     @Override
@@ -74,25 +64,24 @@ public class ControladorLogin implements ActionListener {
         status = false;
         System.out.println(ae.getActionCommand());
         switch (ae.getActionCommand()) {
-            case "Conectar": {
-                System.out.println("\n\n\n\n\n\n\nConectar\n\n\n\n\n\n\n");
+            case "Conectar":
+            {
                 try {
-                    status = conectar();
-                    if (status) {
-                        ControladorPrincipal c = new ControladorPrincipal(conexion, this.SGBD);
-                    } else {
-                        Thread.sleep(1000*4);
-                        throw new SQLException();
-                    }
-
+                    sesion = conectar();
                 } catch (SQLException | ClassNotFoundException ex) {
-                    this.mensaje = new VistaMensajes("ERROR", "Error al intentar conectarse");
-                    
-                } catch (InterruptedException ex) {
                     Logger.getLogger(ControladorLogin.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            
+                if (sesion != null) {
+                    //mensaje.show(1, "Conexión correcta con Hibernate");
+                    vLogin.dispose();
+                    ControladorPrincipal controlador = new ControladorPrincipal(sesion, vLogin.Servidores.getSelectedItem().toString());
+                } else {
+                    //mensaje.show(-1, "Error en la conexión. No se ha podido crear una sesión\n");
+                }
             }
-            break;
+                break;
+
             case "Salir": {
                 try {
                     desconectar();
@@ -101,7 +90,7 @@ public class ControladorLogin implements ActionListener {
                 } catch (ClassNotFoundException | SQLException e) {
 
                     JOptionPane.showMessageDialog(null, "Operación no realizada");
-                    this.mensaje = new VistaMensajes("ERROR", "Error al intentar desconectarse");
+                    this.mensaje.show(-1, "Error al intentar desconectarse");
 
                 }
 
